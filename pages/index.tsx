@@ -13,6 +13,7 @@ import {
 
 import { useFetchMovies } from '../api/fetchHooks';
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [query, setQuery] = useState('');
@@ -22,9 +23,11 @@ export default function Home() {
 
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    
+
     if (scrollHeight - scrollTop <= clientHeight) fetchNextPage();
   };
+
+  if (error) return <div>Something went wrong!</div>
   return (
     <main
       className='relative h-screen overflow-y-scroll'
@@ -34,14 +37,14 @@ export default function Home() {
       {!query && data && data.pages && (
         <Hero
           imgUrl={
-            data?.pages[0].results[0]?.backdrop_path
+            data?.pages[0].results[1]?.backdrop_path
               ? IMAGE_BASE_URL +
                 BACKDROP_SIZE +
-                data.pages[0].results[0].backdrop_path
+                data.pages[0].results[1].backdrop_path
               : '/no_image.jpg'
           }
-          title={data?.pages[0].results[0].title}
-          text={data?.pages[0].results[0].overview}
+          title={data?.pages[0].results[1].title}
+          text={data?.pages[0].results[1].overview}
         />
       )}
       <Grid
@@ -56,16 +59,18 @@ export default function Home() {
           data.pages &&
           data.pages.map((page) =>
             page.results.map((movie) => (
-              <div key={movie.id}>
-                <Card
-                  imgUrl={
-                    movie.poster_path
-                      ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
-                      : '/no-image.jpg'
-                  }
-                  title={movie.original_title}
-                />
-              </div>
+              <Link key={movie.id} href={`/${movie.id}`}>
+                <div className='cursor-pointer hover:opacity-80 duration-300'>
+                  <Card
+                    imgUrl={
+                      movie.poster_path
+                        ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
+                        : '/no_image.jpg'
+                    }
+                    title={movie.original_title}
+                  />
+                </div>
+              </Link>
             ))
           )}
       </Grid>
