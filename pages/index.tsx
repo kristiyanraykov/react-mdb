@@ -8,7 +8,6 @@ import {
   IMAGE_BASE_URL,
   BACKDROP_SIZE,
   POSTER_SIZE,
-  movieUrl,
 } from '../config';
 
 import { useFetchMovies } from '../api/fetchHooks';
